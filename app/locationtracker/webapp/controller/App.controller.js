@@ -95,7 +95,7 @@ sap.ui.define([
         return;
       }
 
-      window.location.href = "/logout";
+      window.location.href = "/my/logout";
     },
 
     onGoToLogin: function () {
@@ -462,9 +462,13 @@ sap.ui.define([
 
     _ensureMap: function () {
       const mapHost = this.byId("trackerMap");
-      const mapContainer = mapHost && mapHost.getDomRef();
+      const mapRoot = mapHost && mapHost.getDomRef();
+      const mapContainer = mapRoot && mapRoot.querySelector("#trackerMapHost");
 
       if (!mapContainer) {
+        setTimeout(function () {
+          this._ensureMap();
+        }.bind(this), 100);
         return;
       }
 
@@ -537,6 +541,7 @@ sap.ui.define([
           }
         }.bind(this), 250);
       } catch (error) {
+        window.console.error("Map initialization failed", error);
         this._viewModel.setProperty("/statusText", "Map initialization failed");
       }
     },
