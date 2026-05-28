@@ -167,8 +167,8 @@
 
               <Panel headerText="Route Map" class="mapPanel">
                 <content>
-                  <VBox class="mapShell">
-                    <core:HTML id="trackerMap" class="trackerMap" />
+                  <VBox id="trackerMapContainer" class="mapShell">
+                    <core:HTML id="trackerMap" content='<div id="trackerMapHost" class="trackerMap"></div>' />
                   </VBox>
                 </content>
               </Panel>
