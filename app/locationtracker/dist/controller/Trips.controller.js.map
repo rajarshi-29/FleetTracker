@@ -1,0 +1,1 @@
+{"version":3,"file":"Trips.controller.js","names":["sap","ui","define","Controller","extend","onInit"],"sources":["Trips-dbg.controller.js"],"mappings":"AAAAA,IAAIC,GAAGC,OAAO,CACV,8BACAC,IACA,aAEA,OAAOA,EAAWC,OAAO,uDAAwD,CAC7E,MAAAC,GACA","ignoreList":[]}

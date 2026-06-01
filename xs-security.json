@@ -1,0 +1,31 @@
+{
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.FleetAdmin",
+      "description": "FleetAdmin"
+    },
+    {
+      "name": "$XSAPPNAME.Driver",
+      "description": "Driver"
+    }
+  ],
+  "attributes": [],
+  "role-templates": [
+    {
+      "name": "FleetAdmin",
+      "description": "generated",
+      "scope-references": [
+        "$XSAPPNAME.FleetAdmin"
+      ],
+      "attribute-references": []
+    },
+    {
+      "name": "Driver",
+      "description": "generated",
+      "scope-references": [
+        "$XSAPPNAME.Driver"
+      ],
+      "attribute-references": []
+    }
+  ]
+}

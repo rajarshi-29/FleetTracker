@@ -1,0 +1,36 @@
+{
+  "name": "locationtracker",
+  "version": "1.0.0",
+  "dependencies": {
+    "@cap-js/hana": "^2.7.1",
+    "@sap/cds": "^9.9.0",
+    "@sap/cds-dk": "^9.9.0",
+    "@sap/xssec": "^4",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.22.1",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "@cap-js/sqlite": "^2.2.1",
+    "@sap/cds-dk": "^9",
+    "@sap/ux-ui5-tooling": "^1.23.0",
+    "cds-plugin-ui5": "^0.13.0"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch-locationtracker": "cds watch --open com.locationtracker.locationtracker/index.html?sap-ui-xx-viewCache=false --livereload false"
+  },
+  "private": true,
+  "workspaces": [
+    "app/*"
+  ],
+  "cds": {
+    "requires": {
+      "[production]": {
+        "auth": "xsuaa"
+      },
+      "html5-repo": true
+    }
+  }
+}

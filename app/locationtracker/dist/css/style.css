@@ -1,0 +1,162 @@
+/* Enter your custom styles here */
+.trackerPage {
+  gap: 1.25rem;
+  padding: 1.25rem;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.stateShell {
+  min-height: 60vh;
+}
+
+.centerCard {
+  background: #ffffff;
+  border: 1px solid #d9e7f7;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 0.75rem 1.5rem rgba(31, 65, 107, 0.08);
+  max-width: 520px;
+  margin: 4rem auto 0;
+  gap: 0.75rem;
+}
+
+.heroSection {
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg, #f5f9ff 0%, #e9f6ff 40%, #edf8f2 100%);
+  border-radius: 1.1rem;
+  border: 1px solid #dcecf9;
+  box-shadow: 0 0.5rem 1.25rem rgba(21, 93, 166, 0.09);
+}
+
+.headerBar {
+  border-radius: 0.9rem;
+  background: #0a6ed1;
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 0.5rem 1rem rgba(8, 55, 104, 0.2);
+}
+
+.headerBar .sapMTitle,
+.headerBar .sapMText,
+.headerBar .sapMBtnInner {
+  color: #ffffff;
+}
+
+.sectionCard {
+  background: #ffffff;
+  border-radius: 1rem;
+  border: 1px solid #d9e7f7;
+  padding: 1.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(59, 106, 152, 0.08);
+  gap: 0.75rem;
+}
+
+.heroRow {
+  gap: 1rem;
+}
+
+.heroText {
+  gap: 0.4rem;
+}
+
+.heroSubtitle {
+  color: #3f5161;
+}
+
+.statusStrip {
+  gap: 1.5rem;
+  padding-top: 0.25rem;
+}
+
+.buttonCluster {
+  gap: 0.75rem;
+}
+
+.cardRow {
+  gap: 1rem;
+  width: 100%;
+}
+
+.metricCard {
+  min-width: 17rem;
+  flex: 1 1 18rem;
+  border-radius: 1rem;
+}
+
+.kpiCard {
+  border: 1px solid #d9e7f7;
+  box-shadow: 0 0.5rem 1rem rgba(59, 106, 152, 0.08);
+}
+
+.kpiIcon {
+  color: #0a6ed1;
+  font-size: 1.2rem;
+}
+
+.metricContent {
+  gap: 0.8rem;
+  padding: 1rem;
+}
+
+.metricColumn {
+  flex: 1 1 20rem;
+}
+
+.mapPanel {
+  border: 1px solid #d9e7f7;
+  border-radius: 1rem;
+  box-shadow: 0 0.5rem 1rem rgba(59, 106, 152, 0.08);
+  overflow: hidden;
+}
+
+.metricsPanel {
+  border: 1px solid #e0eaf4;
+  border-radius: 1rem;
+}
+
+.mapShell {
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid #d9e7f7;
+  width: 100%;
+  min-height: 28rem;
+  background: #f5f9ff;
+}
+
+.trackerMap {
+  width: 100%;
+  height: 100%;
+  min-height: 28rem;
+  display: block;
+}
+
+.fabButton {
+  position: fixed;
+  right: 2rem;
+  bottom: 2rem;
+  z-index: 1000;
+  border-radius: 50%;
+  width: 3.25rem;
+  height: 3.25rem;
+  box-shadow: 0 0.75rem 1.5rem rgba(15, 65, 114, 0.3);
+}
+
+@media (max-width: 960px) {
+  .trackerPage {
+    padding: 1rem;
+  }
+
+  .heroSection {
+    padding: 1rem;
+  }
+
+  .fabButton {
+    right: 1.25rem;
+    bottom: 1.25rem;
+  }
+}

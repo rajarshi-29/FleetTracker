@@ -1,0 +1,213 @@
+<mvc:View
+  controllerName="com.locationtracker.locationtracker.controller.App"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  displayBlock="true">
+  <App id="app">
+    <pages>
+      <Page showHeader="false">
+        <content>
+          <VBox class="trackerPage">
+            <VBox visible="{= ${appState>/sCurrentView} === 'loading' }" class="stateShell">
+              <VBox class="centerCard" alignItems="Center" justifyContent="Center">
+                <BusyIndicator size="2rem" />
+                <Text text="Checking authentication status..." class="sapUiSmallMarginTop" />
+              </VBox>
+            </VBox>
+
+            <VBox visible="{= ${appState>/sCurrentView} === 'error401' }" class="stateShell">
+              <VBox class="centerCard" alignItems="Center" justifyContent="Center">
+                <Title text="Access Denied" level="H3" />
+                <Text text="Your session is not authorized to access this application." class="sapUiSmallMarginTop" />
+                <Button text="Go to Login" type="Emphasized" press=".onGoToLogin" class="sapUiSmallMarginTop" />
+              </VBox>
+            </VBox>
+
+            <VBox visible="{= ${appState>/sCurrentView} === 'loginPage' }" class="stateShell">
+              <VBox class="centerCard">
+                <Title text="FleetTracker" level="H2" />
+                <Text text="Choose how you want to sign in." class="sapUiTinyMarginBottom" />
+                <IconTabBar
+                  expandable="false"
+                  selectedKey="{appState>/loginTab}"
+                  select=".onLoginTabSelect">
+                  <items>
+                    <IconTabFilter text="Admin Login" key="admin" icon="sap-icon://manager">
+                      <VBox class="sapUiSmallMarginTop" width="100%">
+                        <Text text="Use your FleetAdmin credentials." />
+                        <Button text="Login as Fleet Admin" type="Emphasized" press=".onAdminLoginPress" class="sapUiSmallMarginTop" />
+                      </VBox>
+                    </IconTabFilter>
+                    <IconTabFilter text="Driver Login" key="driver" icon="sap-icon://employee">
+                      <VBox class="sapUiSmallMarginTop" width="100%">
+                        <Label text="Email" />
+                        <Input value="{appState>/driverLogin/email}" type="Email" width="100%" />
+                        <Label text="Password" class="sapUiSmallMarginTop" />
+                        <Input value="{appState>/driverLogin/password}" type="Password" width="100%" />
+                        <Button text="Login" type="Emphasized" press=".onDriverLoginPress" class="sapUiSmallMarginTop" />
+                      </VBox>
+                    </IconTabFilter>
+                  </items>
+                </IconTabBar>
+                <Text text="{appState>/authError}" visible="{= !!${appState>/authError} }" class="sapUiSmallMarginTop" />
+                <ObjectStatus title="System Status" text="Not authenticated" state="Information" class="sapUiSmallMarginTop" />
+              </VBox>
+            </VBox>
+
+            <VBox visible="{= ${appState>/sCurrentView} === 'adminDashboard' }">
+              <Toolbar class="headerBar">
+                <Title text="FleetTracker" />
+                <ToolbarSpacer />
+                <Text text="{appState>/adminProfile/name}" />
+                <Button text="Logout" type="Transparent" press=".onLogoutPress" />
+              </Toolbar>
+
+              <VBox class="sectionCard">
+                <HBox justifyContent="SpaceBetween" alignItems="Center">
+                  <Title text="Drivers" level="H3" />
+                  <Text text="Manage the drivers in your fleet." />
+                </HBox>
+                <Table items="{appState>/drivers}" class="sapUiSmallMarginTop" inset="false">
+                  <columns>
+                    <Column><Text text="Name" /></Column>
+                    <Column><Text text="Email" /></Column>
+                    <Column><Text text="Vehicle ID" /></Column>
+                    <Column hAlign="Center"><Text text="Status" /></Column>
+                    <Column hAlign="Center"><Text text="Activity" /></Column>
+                    <Column hAlign="Center"><Text text="Action" /></Column>
+                  </columns>
+                  <items>
+                    <ColumnListItem>
+                      <cells>
+                        <Text text="{appState>name}" />
+                        <Text text="{appState>email}" />
+                        <Text text="{appState>vehicleId}" />
+                        <ObjectStatus
+                          text="{= ${appState>isActive} ? 'Active' : 'Inactive' }"
+                          state="{= ${appState>isActive} ? 'Success' : 'Warning' }" />
+                        <ObjectStatus
+                          text="{appState>activityStatus}"
+                          state="{= ${appState>activityStatus} === 'On Trip' ? 'Success' : 'None' }" />
+                        <HBox>
+                          <Button icon="sap-icon://decline" type="Transparent" press=".onDeleteDriver"
+                                  visible="{= ${appState>isActive} }" tooltip="Deactivate" />
+                          <Button icon="sap-icon://activate" type="Transparent" press=".onReactivateDriver"
+                                  visible="{= !${appState>isActive} }" tooltip="Reactivate" />
+                          <Button icon="sap-icon://delete" type="Transparent" press=".onPermanentlyDeleteDriver"
+                                  visible="{= !${appState>isActive} }" tooltip="Permanently Delete" />
+                        </HBox>
+                      </cells>
+                    </ColumnListItem>
+                  </items>
+                </Table>
+              </VBox>
+
+              <Button icon="sap-icon://add-employee" type="Emphasized" press=".onOpenAddDriverDialog" class="fabButton" tooltip="Add Driver" />
+            </VBox>
+
+            <VBox visible="{= ${appState>/sCurrentView} === 'driverDashboard' }">
+              <Toolbar class="headerBar">
+                <Title text="FleetTracker" />
+                <ToolbarSpacer />
+                <Text text="{appState>/driverProfile/name}" />
+                <Button text="Logout" type="Transparent" press=".onLogoutPress" />
+              </Toolbar>
+
+              <VBox class="heroSection">
+                <HBox class="heroRow" wrap="Wrap" justifyContent="SpaceBetween" alignItems="Center">
+                  <VBox class="heroText">
+                    <Title text="Driver Control Center" level="H2" />
+                    <Text text="Start, stop, and monitor your trip in real time." class="heroSubtitle" />
+                  </VBox>
+                  <HBox wrap="Wrap" class="buttonCluster">
+                    <Button text="Start Trip" type="Emphasized" press=".onStartTracking" visible="{= !${appState>/tracking} }" />
+                    <Button text="Stop Trip" type="Reject" press=".onStopTracking" visible="{appState>/tracking}" />
+                    <Button text="Refresh Path" icon="sap-icon://refresh" press=".onRefreshPath" />
+                  </HBox>
+                </HBox>
+                <HBox class="statusStrip" wrap="Wrap" alignItems="Center">
+                  <ObjectStatus title="System Status" text="{appState>/statusText}" state="{= ${appState>/tracking} ? 'Success' : 'Information' }" />
+                  <ObjectStatus title="Location Permission" text="{appState>/permissionText}" state="{= ${appState>/tracking} ? 'Success' : 'Warning' }" />
+                </HBox>
+              </VBox>
+            </VBox>
+
+            <VBox visible="{= ${appState>/sCurrentView} === 'adminDashboard' || ${appState>/sCurrentView} === 'driverDashboard' }">
+              <HBox wrap="Wrap" class="cardRow kpiRow">
+                <Panel headerText="Current Trip" class="metricCard kpiCard">
+                  <content>
+                    <VBox class="metricContent">
+                      <HBox justifyContent="SpaceBetween" alignItems="Center">
+                        <ObjectStatus title="Title" text="{= ${appState>/currentTrip/title} || 'No active trip'}" />
+                        <core:Icon src="sap-icon://journey-change" class="kpiIcon" />
+                      </HBox>
+                      <ObjectStatus title="Status" text="{= ${appState>/currentTrip/status} || 'IDLE'}" state="{= ${appState>/currentTrip/status} === 'ACTIVE' ? 'Success' : 'Information' }" />
+                      <ObjectStatus title="Started At" text="{= ${appState>/currentTrip/startedAt} || '-'}" />
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="Live Position" class="metricCard kpiCard">
+                  <content>
+                    <VBox class="metricContent">
+                      <HBox justifyContent="SpaceBetween" alignItems="Center">
+                        <Title text="Latest Coordinates" level="H5" />
+                        <core:Icon src="sap-icon://map-3" class="kpiIcon" />
+                      </HBox>
+                      <ObjectStatus title="Latitude" text="{= ${appState>/lastPoint/latitude} || '-'}" />
+                      <ObjectStatus title="Longitude" text="{= ${appState>/lastPoint/longitude} || '-'}" />
+                      <ObjectStatus title="Accuracy (m)" text="{= ${appState>/lastPoint/accuracy} || '-'}" />
+                    </VBox>
+                  </content>
+                </Panel>
+
+                <Panel headerText="Captured Points" class="metricCard kpiCard">
+                  <content>
+                    <VBox class="metricContent">
+                      <HBox justifyContent="SpaceBetween" alignItems="Center">
+                        <Title text="Path Density" level="H5" />
+                        <core:Icon src="sap-icon://line-chart" class="kpiIcon" />
+                      </HBox>
+                      <ObjectNumber number="{appState>/totalPoints}" unit="pts" />
+                      <ProgressIndicator percentValue="{= ${appState>/totalPoints} > 500 ? 100 : ${appState>/totalPoints} / 5 }" displayValue="{= ${appState>/totalPoints} + ' points captured'}" state="Success" />
+                    </VBox>
+                  </content>
+                </Panel>
+              </HBox>
+
+              <Panel headerText="Route Map" class="mapPanel">
+                <content>
+                  <VBox class="mapShell">
+                    <core:HTML id="trackerMap" content="&lt;div class='trackerMap' style='width:100%;height:100%;min-height:28rem;'&gt;&lt;/div&gt;" class="trackerMap" />
+                  </VBox>
+                </content>
+              </Panel>
+
+              <Panel headerText="Performance Metrics" class="metricCard metricsPanel">
+                <content>
+                  <HBox wrap="Wrap" class="cardRow">
+                    <VBox class="metricContent metricColumn">
+                      <ObjectStatus title="Total Trips" text="{appState>/metrics/totalTrips}" />
+                      <ObjectStatus title="Completed Trips" text="{appState>/metrics/completedTrips}" />
+                      <ObjectStatus title="Completion Rate" text="{= ${appState>/metrics/completionRate} + '%'}" state="Success" />
+                      <ObjectStatus title="Avg Points / Trip" text="{appState>/metrics/avgPointsPerTrip}" />
+                      <ObjectStatus title="Avg GPS Accuracy (m)" text="{appState>/metrics/avgGpsAccuracy}" />
+                    </VBox>
+                    <VBox class="metricContent metricColumn">
+                      <ObjectStatus title="Avg Session Duration (ms)" text="{appState>/metrics/avgSessionDurationMs}" />
+                      <ObjectStatus title="Backend Ingest Success" text="{= ${appState>/metrics/ingestSuccessRate} + '%'}" state="Success" />
+                      <ObjectStatus title="Avg Backend Ingest Latency (ms)" text="{appState>/metrics/avgIngestLatencyMs}" />
+                      <ObjectStatus title="Avg Client Update Latency (ms)" text="{appState>/metrics/avgClientUpdateLatencyMs}" />
+                      <ObjectStatus title="Latest Client Update Latency (ms)" text="{appState>/metrics/latestClientUpdateLatencyMs}" />
+                    </VBox>
+                  </HBox>
+                </content>
+              </Panel>
+            </VBox>
+          </VBox>
+        </content>
+      </Page>
+    </pages>
+  </App>
+</mvc:View>

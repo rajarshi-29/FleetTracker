@@ -1,0 +1,24 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:form="sap.ui.layout.form">
+  <Dialog title="Add New Driver" class="addDriverDialog" stretchOnPhone="true">
+    <content>
+      <form:SimpleForm editable="true" layout="ResponsiveGridLayout" labelSpanXL="3" labelSpanL="3" labelSpanM="3" labelSpanS="12">
+        <Label text="Full Name" required="true" />
+        <Input value="{appState>/addDriver/name}" />
+        <Label text="Email" required="true" />
+        <Input value="{appState>/addDriver/email}" type="Email" />
+        <Label text="Temporary Password" required="true" />
+        <Input value="{appState>/addDriver/password}" type="Password" />
+        <Label text="Vehicle ID" />
+        <Input value="{appState>/addDriver/vehicleId}" />
+        <Label text="Phone" />
+        <Input value="{appState>/addDriver/phone}" type="Tel" />
+      </form:SimpleForm>
+    </content>
+    <beginButton>
+      <Button text="Create Driver" type="Emphasized" press=".onCreateDriver" />
+    </beginButton>
+    <endButton>
+      <Button text="Cancel" press=".onCancelAddDriver" />
+    </endButton>
+  </Dialog>
+</core:FragmentDefinition>

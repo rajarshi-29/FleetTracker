@@ -1,0 +1,100 @@
+{
+  "_version": "1.83.0",
+  "sap.app": {
+    "id": "com.locationtracker.locationtracker",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "0.0.1"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "resources": "resources.json",
+    "sourceTemplate": {
+      "id": "@sap/generator-fiori:basic",
+      "version": "1.22.0",
+      "toolsId": "ab43bd86-63c3-4839-87ec-402f7a385a31"
+    },
+    "dataSources": {}
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "",
+      "favIcon": "",
+      "phone": "",
+      "phone@2": "",
+      "tablet": "",
+      "tablet@2": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": true,
+    "dependencies": {
+      "minUI5Version": "1.147.1",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {},
+        "sap.ui.layout": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "com.locationtracker.locationtracker.i18n.i18n"
+        }
+      }
+    },
+    "resources": {
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "controlAggregation": "pages",
+        "controlId": "app",
+        "transition": "slide",
+        "type": "View",
+        "viewType": "XML",
+        "path": "com.locationtracker.locationtracker.view",
+        "async": true,
+        "viewPath": "com.locationtracker.locationtracker.view"
+      },
+      "routes": [
+        {
+          "name": "RouteTrips",
+          "pattern": ":?query:",
+          "target": [
+            "TargetTrips"
+          ]
+        }
+      ],
+      "targets": {
+        "TargetTrips": {
+          "id": "Trips",
+          "name": "Trips"
+        }
+      }
+    },
+    "rootView": {
+      "viewName": "com.locationtracker.locationtracker.view.App",
+      "type": "XML",
+      "id": "App",
+      "async": true
+    }
+  }
+}

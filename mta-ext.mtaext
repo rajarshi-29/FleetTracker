@@ -1,0 +1,9 @@
+_schema-version: "3.3.0"
+ID: locationtracker
+extends: locationtracker
+
+parameters:
+  JWT_SECRET_KEY: fa057d199548f5a179505177eb7bd2de97454fa62836c60ba505f2c8cd4aa6b9
+
+
+

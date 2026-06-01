@@ -1,0 +1,138 @@
+_schema-version: 3.3.0
+ID: locationtracker
+version: 1.0.0
+description: "A simple CAP project."
+parameters:
+  enable-parallel-deployments: true
+  deploy_mode: html5-repo
+  JWT_SECRET_KEY: ""
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npm ci
+        - npx cds build --production
+modules:
+  - name: locationtracker-srv
+    type: nodejs
+    path: gen/srv
+    parameters:
+      instances: 1
+      buildpack: nodejs_buildpack
+      env:
+        JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+    build-parameters:
+      builder: npm-ci
+    provides:
+      - name: srv-api # required by consumers of CAP services (e.g. approuter)
+        properties:
+          srv-url: ${default-url}
+    requires:
+      - name: locationtracker-auth
+      - name: locationtracker-db
+
+  - name: locationtracker-db-deployer
+    type: hdb
+    path: gen/db
+    parameters:
+      buildpack: nodejs_buildpack
+    requires:
+      - name: locationtracker-db
+
+  - name: locationtracker
+    type: approuter.nodejs
+    path: app/router
+    parameters:
+      keep-existing-routes: true
+      disk-quota: 256M
+      memory: 256M
+    requires:
+      - name: srv-api
+        group: destinations
+        properties:
+          name: srv-api # must be used in xs-app.json as well
+          url: ~{srv-url}
+          forwardAuthToken: true
+      - name: locationtracker-auth
+      - name: locationtracker-html5-runtime
+    provides:
+      - name: app-api
+        properties:
+          app-protocol: ${protocol}
+          app-uri: ${default-uri}
+
+  - name: locationtracker-app-deployer
+    type: com.sap.application.content
+    path: gen
+    build-parameters:
+      build-result: app/
+      requires:
+        - name: locationtrackerlocationtracker
+          artifacts:
+            - locationtracker.zip
+          target-path: app/
+    requires:
+      - name: locationtracker-auth
+      - name: srv-api
+      - name: locationtracker-html5-repo-host
+        parameters:
+          content-target: true
+          config:
+            HTML5Runtime_enabled: true
+
+  - name: locationtrackerlocationtracker
+    type: html5
+    path: app/locationtracker
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm ci
+        - npm run build
+      supported-platforms: []
+
+resources:
+  - name: locationtracker-auth
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+      config:
+        xsappname: locationtracker-${org}-${space}
+        tenant-mode: dedicated
+        oauth2-configuration:
+          credential-types:
+            - "binding-secret"
+            - "x509"
+          redirect-uris:
+            - https://*~{app-api/app-uri}/**
+        role-collections:
+          - name: 'FleetAdmin (locationtracker ${org}-${space})'
+            description: 'generated'
+            role-template-references:
+              - '$XSAPPNAME.FleetAdmin'
+          - name: 'Driver (locationtracker ${org}-${space})'
+            description: 'generated'
+            role-template-references:
+              - '$XSAPPNAME.Driver'
+    requires:
+      - name: app-api
+
+  - name: locationtracker-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana
+      service-plan: hdi-shared
+
+  - name: locationtracker-html5-repo-host
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-host
+
+  - name: locationtracker-html5-runtime
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-runtime
