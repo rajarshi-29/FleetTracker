@@ -19,7 +19,7 @@
       "envFile": "${workspaceFolder}/.env1",
       "env": {
         "NODE_ENV": "development",
-        "run.config": "{\"handlerId\":\"cap_run_config_handler_id\",\"runnableId\":\"{\\\"projectPath\\\":\\\"/home/user/locationtracker\\\",\\\"profileName\\\":\\\"development\\\"}\"}"
+        "run.config": "{\"handlerId\":\"cap_run_config_handler_id\",\"runnableId\":\"{\\\"projectPath\\\":\\\"${workspaceFolder}\\\",\\\"profileName\\\":\\\"development\\\"}\"}"
       }
     }
   ]
